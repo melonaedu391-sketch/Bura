@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Ethiopic:wght@100;300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-ethiopic: "Noto Serif Ethiopic", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-church-maroon: #4a0404;
+  --color-church-gold: #d4af37;
+  --color-church-cream: #f9f5f0;
+  --color-church-surface: #ffffff;
+  --color-church-text: #2d1b1b;
+  --color-church-secondary: #7a6e6e;
+  
+  --color-church-dark: #121212;
+  --color-church-dark-surface: #1e1e1e;
+  --color-church-dark-text: #f9f5f0;
+  --color-church-dark-secondary: #a09898;
+  
+  --radius-church: 16px;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /* Prevent scrolling on the body itself to avoid bounce effects on iOS */
+  position: fixed;
+  width: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none; /* Disable long-press menu on mobile */
+}
+
+/* Environment variables for notched phones */
+:root {
+  --safe-area-top: env(safe-area-inset-top);
+  --safe-area-bottom: env(safe-area-inset-bottom);
+  --safe-area-left: env(safe-area-inset-left);
+  --safe-area-right: env(safe-area-inset-right);
+}
+
+body {
+  background-color: var(--color-church-cream);
+  color: var(--color-church-text);
+  font-family: var(--font-ethiopic);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.glass-nav {
+  background: var(--nav-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.card-shadow {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.gold-glow {
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.scroll-none::-webkit-scrollbar {
+  display: none;
+}
+
+main {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}

@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerified() {
+      return isSignedIn();
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email.lower() == 'melonaedu391@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Song Validation
+    function isValidSong(song) {
+      let requiredFields = ['title', 'artist', 'category', 'audioUrl', 'addedAt', 'createdBy'];
+      return song.keys().hasAll(requiredFields) &&
+             song.keys().size() <= 12 &&
+             song.title is string && song.title.size() <= 255 &&
+             song.artist is string && song.artist.size() <= 255 &&
+             song.category in ['mezmur', 'kidasie', 'zema'] &&
+             song.audioUrl is string && song.audioUrl.size() <= 1500 &&
+             song.addedAt is number &&
+             song.createdBy == request.auth.uid;
+    }
+
+    function isValidBranding(data) {
+      return data.keys().size() <= 5 &&
+             (data.get('appName', '') is string && data.get('appName', '').size() <= 200) &&
+             (data.get('logoUrl', '') is string && data.get('logoUrl', '').size() <= 2000);
+    }
+
+    // Collections
+    match /songs/{songId} {
+      allow get, list: if true; 
+      
+      allow create: if isAdmin() && isValidSong(request.resource.data);
+      
+      allow update: if isAdmin() && isValidSong(request.resource.data) &&
+                       request.resource.data.createdBy == resource.data.createdBy;
+      
+      allow delete: if isAdmin();
+    }
+
+    match /settings/branding {
+      allow read: if true;
+      allow write: if isAdmin() && isValidBranding(request.resource.data);
+    }
+
+    match /admins/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.auth.token.email.lower() == 'melonaedu391@gmail.com';
+    }
+
+    // Default deny (moved to end)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

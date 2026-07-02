@@ -1,0 +1,55 @@
+{
+  "entities": {
+    "Song": {
+      "title": "Song",
+      "description": "A spiritual hymn or mezmur",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "artist": { "type": "string" },
+        "category": { "type": "string", "enum": ["mezmur", "kidasie", "zema"] },
+        "duration": { "type": "string" },
+        "audioUrl": { "type": "string" },
+        "isFeatured": { "type": "boolean" },
+        "lyrics": { "type": "string" },
+        "addedAt": { "type": "number" },
+        "createdBy": { "type": "string" }
+      },
+      "required": ["title", "artist", "category", "audioUrl", "addedAt", "createdBy"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "User with management privileges",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin"] }
+      },
+      "required": ["email", "role"]
+    },
+    "Branding": {
+      "title": "Branding",
+      "description": "Application identity settings",
+      "type": "object",
+      "properties": {
+        "appName": { "type": "string" },
+        "logoUrl": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/songs/{songId}": {
+      "schema": "Song",
+      "description": "Collection of spiritual songs"
+    },
+    "/admins/{userId}": {
+      "schema": "Admin",
+      "description": "Registry of administrators"
+    },
+    "/settings/branding": {
+      "schema": "Branding",
+      "description": "Dynamic app branding configuration"
+    }
+  }
+}
